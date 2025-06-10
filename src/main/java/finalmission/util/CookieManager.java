@@ -27,7 +27,7 @@ public class CookieManager {
     }
 
     public static Cookie expireCookie(String name) {
-        Cookie cookie = new Cookie("token", null);
+        Cookie cookie = new Cookie(name, null);
         cookie.setMaxAge(0);
         return cookie;
     }
