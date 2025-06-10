@@ -7,6 +7,7 @@ import finalmission.cake.dto.CakeDetailsResponse;
 import finalmission.cake.dto.CakeReservationRequest;
 import finalmission.cake.dto.CakeReservationResponse;
 import finalmission.cake.service.CakeService;
+import finalmission.exception.UnauthorizedException;
 import finalmission.member.jwt.TokenProvider;
 import finalmission.util.CookieManager;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,9 +18,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,6 +53,7 @@ public class CakeController {
 
     @GetMapping("/dates")
     public ResponseEntity<List<AvailableDateResponse>> findAvailableDates() {
+        //TODO 해야됨
         List<AvailableDateResponse> response = cakeService.findAvailableDates();
         return ResponseEntity.ok(response);
     }
@@ -64,9 +68,22 @@ public class CakeController {
     @PostMapping("/cakes/{id}")
     public ResponseEntity<Void> createCakeReservation(@Valid @RequestBody CakeReservationRequest request,
                                                                          HttpServletRequest servletRequest) {
-        String authorization = CookieManager.extractByName("authorization", servletRequest).get();
-        Long memberId = tokenProvider.getMemberIdFromToken(authorization);
+        Long memberId = getMemberId(servletRequest);
         cakeService.create(request, memberId);
         return ResponseEntity.created(URI.create("/cakes/" + memberId)).build();
+    }
+
+//    @GetMapping("/members/cakes")
+//    public ResponseEntity<List<MemberCakesResponse>>(HttpServletRequest request) {
+//
+//    }
+
+    private Long getMemberId(HttpServletRequest servletRequest) {
+        Optional<String> optionalToken = CookieManager.extractByName("authorization", servletRequest);
+        if(optionalToken.isPresent()) {
+            String authorization = optionalToken.get();
+            return tokenProvider.getMemberIdFromToken(authorization);
+        }
+        throw UnauthorizedException.jwtTokenInvalid();
     }
 }
