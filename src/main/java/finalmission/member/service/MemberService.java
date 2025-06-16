@@ -20,6 +20,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordTransformer passwordTransformer;
+    private final NameGenerator nameGenerator;
 
     public SignupResponse signup(SignupRequest request) {
         validateDuplicateEmail(request.email());
@@ -51,6 +52,6 @@ public class MemberService {
 
 
     private Member buildMember(SignupRequest request) {
-        return new Member(request.name(), request.email(), passwordTransformer.encode(request.password()));
+        return new Member(nameGenerator.generate(), request.email(), passwordTransformer.encode(request.password()));
     }
 }
