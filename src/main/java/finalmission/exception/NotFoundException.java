@@ -1,9 +1,8 @@
 package finalmission.exception;
 
-import java.util.function.Supplier;
 import org.springframework.http.HttpStatus;
 
-public class NotFoundException extends CakeDomainException{
+public class NotFoundException extends CakeDomainException {
 
     private static final HttpStatus HTTP_STATUS = HttpStatus.NOT_FOUND;
 
@@ -30,5 +29,9 @@ public class NotFoundException extends CakeDomainException{
 
     public static NotFoundException cakeNotFound() {
         return new NotFoundException("해당 케이크가 존재하지 않습니다.", "CAKE_NOT_FOUND");
+    }
+
+    public static NotFoundException reservationNotFound() {
+        return new NotFoundException("해당 예약이 존재하지 않습니다.", "RESERVATION_NOT_FOUND");
     }
 }

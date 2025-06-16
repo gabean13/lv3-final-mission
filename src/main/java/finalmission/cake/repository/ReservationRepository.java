@@ -12,4 +12,10 @@ public interface ReservationRepository {
     Optional<Reservation> findByCakeIdAndDateAndTimeId(Long cakeId, LocalDate date, Long timeId);
 
     Reservation save(Reservation reservation);
+
+    List<Reservation> findByMemberId(Long memberId);
+
+    Optional<Reservation> findByCakeIdAndMemberId(Long cakeId, Long memberId);
+
+    void delete(Reservation reservation);
 }

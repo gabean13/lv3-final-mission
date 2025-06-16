@@ -1,10 +1,11 @@
 package finalmission.cake.service;
 
-import finalmission.cake.dto.AvailableDateResponse;
 import finalmission.cake.dto.AvailableTimeResponse;
 import finalmission.cake.dto.BasicCakeResponse;
 import finalmission.cake.dto.CakeDetailsResponse;
 import finalmission.cake.dto.CakeReservationRequest;
+import finalmission.cake.dto.CakeReservationResponse;
+import finalmission.cake.dto.MemberCakesResponse;
 import finalmission.cake.model.Cake;
 import finalmission.cake.model.Flavor;
 import finalmission.cake.model.Reservation;
@@ -22,6 +23,7 @@ import finalmission.member.repository.MemberRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +37,6 @@ public class CakeService {
     private final ReservationRepository reservationRepository;
     private final ReservationTimeRepository reservationTimeRepository;
     private final MemberRepository memberRepository;
-    private final HolidayRestClient holidayRestClient;
 
     public List<BasicCakeResponse> findAll() {
         List<Cake> cakes = cakeRepository.findAllByIsAvailable(true);
@@ -62,7 +63,7 @@ public class CakeService {
     private List<AvailableTimeResponse> getAvailableTimes(List<ReservationTime> bookedTimes) {
         List<AvailableTimeResponse> availableTimes = new ArrayList<>();
         for (ReservationTime time : reservationTimeRepository.findAll()) {
-            if(bookedTimes.contains(time)) {
+            if (bookedTimes.contains(time)) {
                 availableTimes.add(AvailableTimeResponse.from(time, false));
                 continue;
             }
@@ -71,15 +72,10 @@ public class CakeService {
         return availableTimes;
     }
 
-    public List<AvailableDateResponse> findAvailableDates() {
-        //공휴일 제외 오늘부터 한달
-        return null;
-    }
-
-    public void create(CakeReservationRequest request, Long memberId) {
+    public CakeReservationResponse create(CakeReservationRequest request, Long memberId) {
         validateReservation(request);
-        Reservation reservation = buildReservation(request, memberId);
-        reservationRepository.save(reservation);
+        Reservation reservation = reservationRepository.save(buildReservation(request, memberId));
+        return CakeReservationResponse.from(reservation);
     }
 
     private Reservation buildReservation(CakeReservationRequest request, Long memberId) {
@@ -98,19 +94,38 @@ public class CakeService {
     }
 
     private void validateReservation(CakeReservationRequest request) {
-        if(isDateAndTimeInvalid(request.cakeId(), request.date(), request.timeId())) {
+        if (isDateAndTimeInvalid(request.cakeId(), request.date(), request.timeId())) {
             throw BadRequestException.pickUpTimeInvalid();
         }
     }
 
     private boolean isDateAndTimeInvalid(Long cakeId, LocalDate date, Long timeId) {
-        if(isHoliday(date)) {
-            return true;
-        }
         return reservationRepository.findByCakeIdAndDateAndTimeId(cakeId, date, timeId).isPresent();
     }
 
-    private boolean isHoliday(LocalDate date) {
-        return true;
+    public List<MemberCakesResponse> getMemberCakeReservations(Long memberId) {
+        List<Reservation> memberReservations = reservationRepository.findByMemberId(memberId);
+        return memberReservations.stream()
+                .map(MemberCakesResponse::from)
+                .toList();
+    }
+
+    public void deleteCakeReservation(Long cakeId, Long memberId) {
+        Reservation reservation = findReservationByCakeIdAndMemberId(cakeId, memberId);
+        reservationRepository.delete(reservation);
+    }
+
+    public CakeReservationResponse updateReservation(Long memberId, CakeReservationRequest cakeReservationRequest) {
+        Reservation reservation = findReservationByCakeIdAndMemberId(memberId, cakeReservationRequest.cakeId());
+        reservation.update(buildReservation(cakeReservationRequest, memberId));
+        return CakeReservationResponse.from(reservation);
+    }
+
+    private Reservation findReservationByCakeIdAndMemberId(Long cakeId, Long memberId) {
+        Optional<Reservation> reservationOptional = reservationRepository.findByCakeIdAndMemberId(cakeId, memberId);
+        if (reservationOptional.isEmpty()) {
+            throw NotFoundException.reservationNotFound();
+        }
+        return reservationOptional.get();
     }
 }

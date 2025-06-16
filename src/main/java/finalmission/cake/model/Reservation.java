@@ -75,8 +75,18 @@ public class Reservation {
     }
 
     private void validateLettering(String lettering) {
-        if(lettering.length() > 15) {
+        if (lettering.length() > 15) {
             throw BadRequestException.letteringTooLong();
         }
+    }
+
+    public void update(Reservation updatedReservation) {
+        this.date = updatedReservation.getDate();
+        this.time = updatedReservation.getTime();
+        this.member = updatedReservation.getMember();
+        this.cake = updatedReservation.getCake();
+        this.flavor = updatedReservation.getFlavor();
+        this.size = updatedReservation.getSize();
+        this.lettering = updatedReservation.getLettering();
     }
 }
