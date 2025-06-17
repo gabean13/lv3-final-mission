@@ -15,7 +15,7 @@ public interface ReservationRepository {
 
     List<Reservation> findByMemberId(Long memberId);
 
-    Optional<Reservation> findByCakeIdAndMemberId(Long cakeId, Long memberId);
+    Optional<Reservation> findByIdAndMemberId(Long reservationId, Long memberId);
 
     void delete(Reservation reservation);
 }

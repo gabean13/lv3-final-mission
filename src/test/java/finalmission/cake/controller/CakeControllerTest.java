@@ -128,17 +128,18 @@ class CakeControllerTest {
 
     @Test
     void deleteCakeReservationTest() {
-        Map<String, Object> params = new HashMap<>();
-        params.put("cakeId", 1);
-        params.put("flavorId", 1);
-        params.put("sizeId", 1);
-        params.put("timeId", 1);
-        params.put("lettering", "삭제용");
-        params.put("date", "2025.06.30");
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("date", "2025.06.30");
+        requestBody.put("cakeId", 1);
+        requestBody.put("flavorId", 1);
+        requestBody.put("sizeId", 1);
+        requestBody.put("timeId", 2);
+        requestBody.put("lettering", "삭제용");
 
         Long reservationId = RestAssured.given()
                 .cookie("authorization", userCookie)
-                .body(params)
+                .contentType(ContentType.JSON)
+                .body(requestBody)
                 .when().post("/cakes")
                 .then()
                 .statusCode(201)

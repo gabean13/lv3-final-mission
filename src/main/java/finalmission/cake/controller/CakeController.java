@@ -72,19 +72,19 @@ public class CakeController {
     }
 
     @DeleteMapping("/cakes/{id}")
-    public ResponseEntity<Void> deleteCakeReservation(@PathVariable(name = "id") Long cakeId,
+    public ResponseEntity<Void> deleteCakeReservation(@PathVariable(name = "id") Long reservationId,
                                                       HttpServletRequest request) {
         Long memberId = getMemberId(request);
-        cakeService.deleteCakeReservation(cakeId, memberId);
+        cakeService.deleteCakeReservation(reservationId, memberId);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/cakes/{id}")
-    public ResponseEntity<CakeReservationResponse> updateCakeReservation(@PathVariable Long id,
+    public ResponseEntity<CakeReservationResponse> updateCakeReservation(@PathVariable(name = "id") Long reservationId,
                                                                          @RequestBody CakeReservationRequest cakeReservationRequest,
                                                                          HttpServletRequest request) {
         Long memberId = getMemberId(request);
-        CakeReservationResponse response = cakeService.updateReservation(memberId, cakeReservationRequest);
+        CakeReservationResponse response = cakeService.updateReservation(memberId, reservationId, cakeReservationRequest);
         return ResponseEntity.ok(response);
     }
 

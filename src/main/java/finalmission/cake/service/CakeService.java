@@ -110,19 +110,19 @@ public class CakeService {
                 .toList();
     }
 
-    public void deleteCakeReservation(Long cakeId, Long memberId) {
-        Reservation reservation = findReservationByCakeIdAndMemberId(cakeId, memberId);
+    public void deleteCakeReservation(Long reservationId, Long memberId) {
+        Reservation reservation = findReservationByIdAndMemberId(reservationId, memberId);
         reservationRepository.delete(reservation);
     }
 
-    public CakeReservationResponse updateReservation(Long memberId, CakeReservationRequest cakeReservationRequest) {
-        Reservation reservation = findReservationByCakeIdAndMemberId(memberId, cakeReservationRequest.cakeId());
+    public CakeReservationResponse updateReservation(Long memberId, Long reservationId, CakeReservationRequest cakeReservationRequest) {
+        Reservation reservation = findReservationByIdAndMemberId(memberId, reservationId);
         reservation.update(buildReservation(cakeReservationRequest, memberId));
         return CakeReservationResponse.from(reservation);
     }
 
-    private Reservation findReservationByCakeIdAndMemberId(Long cakeId, Long memberId) {
-        Optional<Reservation> reservationOptional = reservationRepository.findByCakeIdAndMemberId(cakeId, memberId);
+    private Reservation findReservationByIdAndMemberId(Long cakeId, Long memberId) {
+        Optional<Reservation> reservationOptional = reservationRepository.findByIdAndMemberId(cakeId, memberId);
         if (reservationOptional.isEmpty()) {
             throw NotFoundException.reservationNotFound();
         }
