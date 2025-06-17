@@ -144,7 +144,6 @@ class CakeControllerTest {
                 .statusCode(201)
                 .extract().jsonPath().getLong("reservationId");
 
-        // 삭제 요청
         RestAssured.given().log().all()
                 .cookie("authorization", userCookie)
                 .when().delete("/cakes/" + reservationId)
@@ -154,7 +153,6 @@ class CakeControllerTest {
 
     @Test
     void updateCakeReservationTest() {
-        // 사전 예약 생성
         Map<String, Object> params = new HashMap<>();
         params.put("date", "2025.06.21");
         params.put("cakeId", 1);

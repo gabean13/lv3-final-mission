@@ -1,5 +1,5 @@
-insert into member(member_id, name, email, password)
-values (1L, 'name', 'user@email.com','1234')
+insert into member(name, email, password)
+values ('name', 'user@email.com','1234')
     ;
 
 insert into cake (cake_id, name, description, price, is_available)
@@ -31,6 +31,6 @@ values (1L, '10:00'),
        (5L, '14:00')
     ;
 
-insert into reservation (reservation_id, date, time_id, member_id, cake_id, flavor_id, size_id, lettering)
-values (1L, '2025-06-21', 1L, 1L, 1L, 1L, 1L, '생일축하해')
+insert into reservation (date, time_id, member_id, cake_id, flavor_id, size_id, lettering)
+values ('2025-06-21', 1L, 1L, 1L, 1L, 1L, '생일축하해')
 ;

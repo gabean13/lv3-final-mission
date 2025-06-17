@@ -1,4 +1,4 @@
-package finalmission.member.service;
+package finalmission.member.service.api;
 
 public interface NameGenerator {
 

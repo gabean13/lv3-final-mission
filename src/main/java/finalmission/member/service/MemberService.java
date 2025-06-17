@@ -9,6 +9,7 @@ import finalmission.member.dto.SignupResponse;
 import finalmission.member.jwt.TokenCreateRequest;
 import finalmission.member.model.Member;
 import finalmission.member.repository.MemberRepository;
+import finalmission.member.service.api.NameGenerator;
 import finalmission.util.PasswordTransformer;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,6 @@ public class MemberService {
             throw ConflictException.memberAlreadyExist();
         }
     }
-
 
     private Member buildMember(SignupRequest request) {
         return new Member(nameGenerator.generate(), request.email(), passwordTransformer.encode(request.password()));
