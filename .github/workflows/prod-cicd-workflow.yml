@@ -1,4 +1,4 @@
-name: dev-cicd-workflow.yml
+name: prod-cicd-workflow.yml
 on:
   push:
     branches: [ "release" ]
