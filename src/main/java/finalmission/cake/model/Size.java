@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class Size {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "size_id")
     private Long id;
 

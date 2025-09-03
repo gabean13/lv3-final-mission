@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class Flavor {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "flavor_id")
     private Long id;
 

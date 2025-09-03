@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 public class ReservationTime {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reservation_time_id")
     private Long id;
 

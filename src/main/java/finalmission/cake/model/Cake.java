@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class Cake {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cake_id")
     private Long Id;
 
